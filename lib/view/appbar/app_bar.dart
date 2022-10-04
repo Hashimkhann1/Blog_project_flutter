@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 class AppBar extends StatefulWidget {
   const AppBar({Key? key}) : super(key: key);
 

@@ -1,6 +1,7 @@
 import 'package:crud_practice/Widgets/custom_text_button.dart';
 import 'package:crud_practice/utils/color_resource.dart';
-import 'package:crud_practice/view/getTextData/textblog.dart';
+import 'package:crud_practice/view/getData/textblog.dart';
+import 'package:crud_practice/view/textData/add_data.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
@@ -39,9 +40,14 @@ class Home extends StatelessWidget {
                       btnTextSize: 16.0,
                       btnPadding: EdgeInsets.symmetric(
                           horizontal: 20.0, vertical: 10.0),
-                    )),
+                      pressed: (){
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => AddData()));
+                      },
+                    )
+                ),
               ),
             ),
+            SizedBox(height: 10.0,),
             Expanded(child: TextBlog()),
           ],
         ),

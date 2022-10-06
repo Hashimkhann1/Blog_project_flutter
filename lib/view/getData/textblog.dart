@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crud_practice/utils/color_resource.dart';
 import 'package:flutter/material.dart';
 
+final _firestore = FirebaseFirestore.instance.collection('blog');
 class TextBlog extends StatefulWidget {
   const TextBlog({Key? key}) : super(key: key);
 
@@ -11,8 +13,8 @@ class TextBlog extends StatefulWidget {
 class _TextBlogState extends State<TextBlog> {
 
   Future<String> getData() async {
-    await Future.delayed(Duration(seconds: 10));
-    return 'https://miro.medium.com/max/775/0*rZecOAy_WVr16810';
+    await Future.delayed(Duration(seconds: 2));
+    return 'https://cdn1.expresscomputer.in/wp-content/uploads/2021/03/24161745/EC_Artificial_Intelligence_AI_750.jpg';
   }
 
   @override
@@ -25,11 +27,11 @@ class _TextBlogState extends State<TextBlog> {
             return FutureBuilder(
               future: getData(),
                 builder: (context,snapshot){
-              if(snapshot.connectionState == ConnectionState.waiting){
-                return CircularProgressIndicator(strokeWidth: 20.0,);
-              }
-              else{
-                return Container(
+                if(snapshot.connectionState == ConnectionState.waiting){
+                  return CircularProgressIndicator();
+                }
+                else {
+                  return Container(
                     margin: EdgeInsets.all(2.0),
                     decoration: BoxDecoration(
                         color: ColorResource.grayColor,
@@ -40,7 +42,7 @@ class _TextBlogState extends State<TextBlog> {
                         )
                     ),
                   );
-              }
+                }
 
             });
           }

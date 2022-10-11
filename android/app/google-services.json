@@ -7,9 +7,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:557236639709:android:c79ecb77a21b95c9f5c834",
+        "mobilesdk_app_id": "1:557236639709:android:b2e8230f13c0b139f5c834",
         "android_client_info": {
-          "package_name": "com.Blog.crud_practice"
+          "package_name": "com.hmkBlog.HMKBlogs"
         }
       },
       "oauth_client": [
@@ -29,6 +29,13 @@
             {
               "client_id": "557236639709-hgvhfqv27fmtrt555mdt200hutr0lu3r.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "557236639709-b7k4h2ebajanr66o2p3ps41eldalven1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hmkblog.crudPractice"
+              }
             }
           ]
         }

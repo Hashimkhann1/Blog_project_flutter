@@ -1,10 +1,14 @@
 import 'package:crud_practice/Widgets/app_text.dart';
 import 'package:crud_practice/utils/color_resource.dart';
 import 'package:crud_practice/view/auth/login.dart';
+import 'package:crud_practice/view/home.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+FirebaseAuth _auth = FirebaseAuth.instance;
+
 class SplashScreen extends StatefulWidget {
-  const SplashScreen({Key? key}) : super(key: key);
+  SplashScreen({Key? key}) : super(key: key);
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -20,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   void goToHome() async {
     await Future.delayed(Duration(seconds: 2));
-    Navigator.push(context, MaterialPageRoute(builder: (context) => Login()));
+    Navigator.push(context, MaterialPageRoute(builder: (context) => _auth.currentUser != null ? Home() : Login()));
   }
 
   @override

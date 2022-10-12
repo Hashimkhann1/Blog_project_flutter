@@ -3,6 +3,7 @@ import 'package:crud_practice/Widgets/custom_text_button.dart';
 import 'package:crud_practice/Widgets/custom_textfield.dart';
 import 'package:crud_practice/utils/color_resource.dart';
 import 'package:crud_practice/view/auth/login.dart';
+import 'package:crud_practice/view/home.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -102,6 +103,7 @@ class _RegisterState extends State<Register> {
                         if(user != null){
                           print('success');
                           toastMessage('User Successfully created');
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => Home()));
                         }
                       }catch(error){
                         print(error);

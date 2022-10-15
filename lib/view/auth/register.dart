@@ -54,7 +54,7 @@ class _RegisterState extends State<Register> {
                   icon: Icon(Icons.email),
                   fieldValueChanged: (value) {
                     email = value;
-                    print(value);
+                    // print(value);
                   },
                   keyboard: TextInputType.emailAddress,
                 ),

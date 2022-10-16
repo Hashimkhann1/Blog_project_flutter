@@ -140,7 +140,7 @@ class _AddPostState extends State<AddPost> {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: Container(
-                  height: MediaQuery.of(context).size.height * .3,
+                  height: MediaQuery.of(context).size.height * .5,
                   width: MediaQuery.of(context).size.width * 1,
                   child: _image != null
                       ? ClipRect(
@@ -154,9 +154,7 @@ class _AddPostState extends State<AddPost> {
                       : InkWell(
                           onTap: () async {
                             // imageDialog(context);
-                            print('hashim khan');
                             await selectImagePickeFromGallery();
-                            print('>> >>> >>??>?>?>?>>> $_image');
                           },
                           child: Container(
                             decoration: BoxDecoration(

@@ -10,5 +10,6 @@ class ColorResource {
   static const Color grayColor = Color(0xFFb1b1b1);
   static const Color lightBlue = Color(0xFF486ee1);
   static const Color lightgray = Color(0xFFcbcacc);
+  static const Color linkblueColor = Color(0xFF4387eb);
 
 }

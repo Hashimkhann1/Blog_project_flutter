@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crud_practice/Widgets/app_text.dart';
 import 'package:crud_practice/view/posts/add_post.dart';
 import 'package:crud_practice/view/posts/blog_detail.dart';
+import 'package:crud_practice/view/posts/get_blog_data_stream.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -27,6 +28,7 @@ class _HomeState extends State<Home> {
         automaticallyImplyLeading: false,
         title: Text('HMK Blogs'),
         actions: [
+          TextButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context) => GetDataThroughStream()));}, child: Text('stream')),
           InkWell(
               onTap: () {
                 Navigator.push(context,
@@ -96,7 +98,7 @@ class _HomeState extends State<Home> {
                                         '${snapshot.data!.docs[index].data()['imageUrl']}',
                                     fit: BoxFit.fill,
                                     width: double.maxFinite,
-                                    height: MediaQuery.of(context).size.height * 0.4),
+                                    height: MediaQuery.of(context).size.height * 0.5),
                               ),
                               Container(
                                 padding: EdgeInsets.only(

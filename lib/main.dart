@@ -1,4 +1,5 @@
 import 'package:crud_practice/provider/select_image_provider.dart';
+import 'package:crud_practice/view/posts/add_post.dart';
 import 'package:crud_practice/view/splash/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';

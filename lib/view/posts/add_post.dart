@@ -3,15 +3,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crud_practice/Widgets/custom_text_button.dart';
 import 'package:crud_practice/provider/select_image_provider.dart';
 import 'package:crud_practice/utils/color_resource.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../../Widgets/custom_textfield.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 
 
 final _firestore = FirebaseFirestore.instance;
+final _auth = FirebaseAuth.instance;
 
 class AddPost extends StatefulWidget {
   const AddPost({Key? key}) : super(key: key);
@@ -21,70 +24,13 @@ class AddPost extends StatefulWidget {
 }
 
 class _AddPostState extends State<AddPost> {
-  File? _image;
   String? downloadUrl;
   String? postTitle;
   String? postDescripition;
-
-
-  // void imageDialog(context) {
-  //   showDialog(
-  //       context: context,
-  //       builder: (context) {
-  //         return AlertDialog(
-  //           shape: RoundedRectangleBorder(
-  //               borderRadius: BorderRadius.circular(10.0)),
-  //           content: Container(
-  //             height: 120,
-  //             child: Column(
-  //               children: <Widget>[
-  //                 Consumer<selectGalleryImageProvider>(
-  //                     builder: (context, value, child) {
-  //                   return InkWell(
-  //                     onTap: () async {
-  //                       await value.getImage();
-  //                       _image = value.selectedImage;
-  //                       setState(() {});
-  //                       Navigator.pop(context);
-  //                     },
-  //                     child: ListTile(
-  //                       leading: Icon(Icons.photo_library),
-  //                       title: Text('Gallery'),
-  //                     ),
-  //                   );
-  //                 }),
-  //                 Consumer<selectCamraImageProvider>(
-  //                     builder: (context, value, child) {
-  //                   return InkWell(
-  //                     onTap: () async {
-  //                       await value.getImage();
-  //                       _image = value.selectedImage;
-  //                       setState(() {});
-  //                       Navigator.pop(context);
-  //                     },
-  //                     child: ListTile(
-  //                       leading: Icon(Icons.camera),
-  //                       title: Text('Camraf'),
-  //                     ),
-  //                   );
-  //                 }),
-  //               ],
-  //             ),
-  //           ),
-  //         );
-  //       });
-  // }
-
-  Future selectImagePickeFromGallery() async {
-    final picker = ImagePicker();
-    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
-    if (pickedImage != null) {
-      _image = File(pickedImage.path);
-      setState(() {});
-    }
-  }
+  bool isLoading = false;
 
   Future uploadImage(File _image) async {
+
     String? url;
     String randomImageName = DateTime.now().microsecondsSinceEpoch.toString();
 
@@ -95,15 +41,21 @@ class _AddPostState extends State<AddPost> {
     return url;
   }
 
-  void addDataToDatabast() async{
+  void addDataToDatabast(BuildContext context) async{
+
+    final imageProvider = Provider.of<selectGalleryImageProvider>(context,listen: false);
+    isLoading = true;
     try {
-      final imageUrl = await uploadImage(_image!);
+      final imageUrl = await uploadImage(imageProvider.image!);
       await _firestore.collection('blog').add({
         'title': postTitle,
         'descripition': postDescripition,
         'imageUrl': imageUrl,
+        'date' : DateFormat('dd MMM yyyy').format(DateTime.now()),
+        'userBlog' : _auth.currentUser?.email
       });
       toastMessage('Bloag upload succesfully');
+      isLoading = false;
       Navigator.pop(context);
     }catch(error){
       print('error while uploading blog $error');
@@ -124,6 +76,8 @@ class _AddPostState extends State<AddPost> {
 
   @override
   Widget build(BuildContext context) {
+
+    final imageProvider = Provider.of<selectGalleryImageProvider>(context,listen: false);
     return SafeArea(
         child: Scaffold(
       appBar: AppBar(
@@ -134,42 +88,47 @@ class _AddPostState extends State<AddPost> {
         child: Column(
           children: <Widget>[
             SizedBox(
-              height: 60,
+              height: 50,
             ),
             Center(
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: Container(
-                  height: MediaQuery.of(context).size.height * .5,
-                  width: MediaQuery.of(context).size.width * 1,
-                  child: _image != null
-                      ? ClipRect(
+                child: GestureDetector(
+                  onTap: () {
+                    Provider.of<selectGalleryImageProvider>(context,listen: false).getImage();
+                  },
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * .5,
+                    width: MediaQuery.of(context).size.width * 1,
+                    child: Consumer<selectGalleryImageProvider>(builder: (context , value , child){
+                      return value.image != null
+                          ? Consumer(builder: (context , value , child){
+                        return ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
                           child: Image.file(
-                            _image!.absolute,
+                            // _image!.absolute,
+                            imageProvider.image!.absolute,
                             width: 100,
                             height: 100,
                             fit: BoxFit.fill,
                           ),
-                        )
-                      : InkWell(
-                          onTap: () async {
-                            // imageDialog(context);
-                            await selectImagePickeFromGallery();
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: ColorResource.lightgray,
-                                borderRadius: BorderRadius.circular(10),
-                                border:
-                                    Border.all(color: ColorResource.grayColor)),
-                            width: 120,
-                            height: 120,
-                            child: Icon(
-                              Icons.camera_alt,
-                              color: ColorResource.lightBlue,
-                            ),
-                          ),
+                        );
+                      })
+                          : Container(
+                        decoration: BoxDecoration(
+                            color: ColorResource.lightgray,
+                            borderRadius: BorderRadius.circular(10),
+                            border:
+                            Border.all(color: ColorResource.grayColor)),
+                        width: 120,
+                        height: 120,
+                        child: Icon(
+                          Icons.camera_alt,
+                          color: ColorResource.lightBlue,
                         ),
+                      );
+                    },)
+                  ),
                 ),
               ),
             ),
@@ -196,7 +155,7 @@ class _AddPostState extends State<AddPost> {
             SizedBox(
               height: 26,
             ),
-            CustomTextButton(
+            isLoading ? CircularProgressIndicator() : CustomTextButton(
               btnText: 'Upload Blog',
               btnBackgroundColor: ColorResource.blackColor,
               btnPadding: EdgeInsets.symmetric(
@@ -205,9 +164,10 @@ class _AddPostState extends State<AddPost> {
               ),
               btntextColor: ColorResource.whiteColor,
               pressed: () {
-                addDataToDatabast();
+                addDataToDatabast(context);
               },
-            )
+            ),
+            SizedBox(height: 10.0,)
           ],
         ),
       ),
